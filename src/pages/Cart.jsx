@@ -1,4 +1,3 @@
-// src/pages/Cart.jsx
 import { useCart } from "../components/CartContext";
 import { Card, CardBody, Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
