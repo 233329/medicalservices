@@ -39,7 +39,7 @@ const ProductDetails = () => {
             src={product.thumbnail}
             alt={product.title}
             className="h-40 w-40 object-cover rounded-xl mb-4 shadow-md"
-          />
+          /> //control the image size
           <div className="text-center md:text-left flex-1 min-w-[250px]">
             <Typography variant="h5" className="font-bold text-gray-800">
               {product.title}
