@@ -16,7 +16,9 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("https://dummyjson.com/products");
-        setProducts(response.data.products); // ✅ correct path
+
+        setProducts(response.data.products);
+
       } catch (error) {
         console.error("Error fetching products:", error);
       }
