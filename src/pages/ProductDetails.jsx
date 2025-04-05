@@ -13,9 +13,8 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `https://fakestoreapi.com/products/${id}`
+          `https://dummyjson.com/products/${id}`
         );
-        // Ensure the product has a quantity property for the cart
         setProduct({ ...response.data, quantity: 1 });
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -26,31 +25,39 @@ const ProductDetails = () => {
   }, [id]);
 
   if (!product)
-    return <Typography className="text-center py-10">Loading...</Typography>;
+    return (
+      <Typography className="text-center py-10 text-blue-800 font-semibold">
+        Loading...
+      </Typography>
+    );
 
   return (
-    <div className="container mx-auto py-10 px-4">
-      <Card className="max-w-2xl mx-auto shadow-lg p-6">
-        <CardBody className="text-center">
+    <div className="min-h-screen bg-gradient-to-br from-sky-100 to-sky-300 py-12 px-4 overflow-x-hidden">
+      <Card className="max-w-3xl mx-auto shadow-2xl rounded-2xl bg-white">
+        <CardBody className="p-6 flex flex-col md:flex-row items-center gap-6">
           <img
-            src={product.image}
+            src={product.thumbnail}
             alt={product.title}
-            className="h-60 mx-auto mb-4 object-contain"
+            className="h-40 w-40 object-cover rounded-xl mb-4 shadow-md"
           />
-          <Typography variant="h2" className="font-bold">
-            {product.title}
-          </Typography>
-          <Typography color="gray" className="mt-2">
-            ${product.price}
-          </Typography>
-          <Typography className="mt-4">{product.description}</Typography>
-          <div className="mt-6 flex justify-center gap-4">
-            <Button color="blue" onClick={() => addToCart(product)}>
-              Add to Cart
-            </Button>
-            <Link to="/">
-              <Button color="gray">Back to Home</Button>
-            </Link>
+          <div className="text-center md:text-left flex-1 min-w-[250px]">
+            <Typography variant="h5" className="font-bold text-gray-800">
+              {product.title}
+            </Typography>
+            <Typography className="text-lg text-blue-700 mt-1 font-semibold">
+              ${product.price}
+            </Typography>
+            <Typography className="mt-3 text-gray-700 text-sm leading-relaxed">
+              {product.description}
+            </Typography>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+              <Button color="blue" onClick={() => addToCart(product)}>
+                Add to Cart
+              </Button>
+              <Link to="/">
+                <Button color="gray">Back to Home</Button>
+              </Link>
+            </div>
           </div>
         </CardBody>
       </Card>
