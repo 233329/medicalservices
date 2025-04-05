@@ -35,7 +35,7 @@ const Cart = () => {
                   src={item.thumbnail}
                   alt={item.title}
                   className="h-40 w-40 object-cover rounded-xl mb-4 shadow-md"
-                />
+                /> //control the size of the image
                 <div className="flex-1 text-center sm:text-left">
                   <Typography variant="h5">{item.title}</Typography>
                   <Typography variant="small" color="gray">
