@@ -1,76 +1,70 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import api from '../utils/api'
+import ProductCard from '../components/ProductCard'
+import '../styles/Home.css'
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://dummyjson.com/products");
-
-        setProducts(response.data.products);
-
+        const products = await api.getProducts()
+        setFeaturedProducts(products.slice(0, 4))
+        setLoading(false)
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error('Error fetching products:', error)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchProducts();
-  }, []);
+    fetchProducts()
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-100 to-sky-300 py-12 px-6">
-      <Typography
-        variant="h2"
-        className="text-center font-bold text-gray-800 mb-10"
+    <div className="home-page">
+      {/* Hero Section */}
+      <section 
+        className="hero" 
+        style={{ 
+          backgroundImage: `url('https://i.postimg.cc/4ys9h6Nd/website-background.jpg')`
+        }}
       >
-        Featured Products
-      </Typography>
+        <div className="hero-overlay">
+          <div className="hero-content">
+            <h1>Welcome to BeautyGift</h1>
+            <p>Discover the perfect beauty gifts for every occasion</p>
+            <Link to="/products" className="btn btn-primary">Shop Now</Link>
+          </div>
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {products.map((product) => (
-          <Card
-            key={product.id}
-            className="transition-transform duration-300 hover:scale-105 bg-white shadow-xl rounded-2xl overflow-hidden"
-          >
-            <CardBody className="p-4 flex flex-col items-center text-center">
-              <img
-                src={product.thumbnail}
-                alt={product.title}
-                className="h-40 w-40 object-cover rounded-xl mb-4 shadow-md"
-              />
-              <Typography variant="h6" className="font-semibold text-gray-900">
-                {product.title}
-              </Typography>
-              <Typography className="text-gray-600 text-sm mt-1">
-                ${product.price}
-              </Typography>
-            </CardBody>
-            <CardFooter className="pt-0 pb-4 text-center">
-              <Link to={`/product/${product.id}`}>
-                <Button
-                  color="light-blue"
-                  size="sm"
-                  className="px-6 py-2 rounded-full shadow hover:shadow-md transition duration-300"
-                >
-                  View Details
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+    
+      <section className="featured-products">
+        <h2>Featured Products</h2>
+        {loading ? (
+          <p>Loading products...</p>
+        ) : (
+          <div className="products-grid">
+            {featuredProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      
+      <section className="newsletter">
+        <h2>Join Our Beauty Community</h2>
+        <form>
+          <input type="email" placeholder="Your email address" required />
+          <button type="submit" className="btn btn-primary">Subscribe</button>
+        </form>
+      </section>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

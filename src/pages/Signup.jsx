@@ -1,59 +1,22 @@
-import { useState } from "react";
-import {
-  Card,
-  CardBody,
-  Input,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
+import AuthForm from '../components/AuthForm'
+import api from '../utils/api'
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Sign Up:", email, password);
-    // Add your sign up logic if needed
-  };
+  const handleSubmit = async (formData) => {
+    try {
+      await api.registerUser(formData)
+      alert('Registration successful! Please login.')
+      navigate('/login')
+    } catch (error) {
+      console.error('Signup error:', error)
+      alert('Registration failed')
+    }
+  }
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-sm p-6 shadow-lg">
-        <CardBody>
-          <Typography variant="h4" className="text-center mb-4">
-            Sign Up
-          </Typography>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Input
-              label="Password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button type="submit" color="blue" fullWidth>
-              Sign Up
-            </Button>
-          </form>
-          <Typography variant="small" className="text-center mt-4">
-            Already have an account?{" "}
-            <Link to="/login" className="text-blue-500">
-              Login
-            </Link>
-          </Typography>
-        </CardBody>
-      </Card>
-    </div>
-  );
-};
+  return <AuthForm type="signup" onSubmit={handleSubmit} />
+}
 
-export default Signup;
+export default Signup

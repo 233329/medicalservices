@@ -1,34 +1,35 @@
-import { Link } from "react-router-dom";
-import { Button } from "@material-tailwind/react";
+import { Link } from 'react-router-dom'
+import { FaShoppingCart, FaUser } from 'react-icons/fa'
+import { useCart } from '../context/CartContext'
+import '../styles/Navbar.css' 
 
 const Navbar = () => {
+  const { cartItems } = useCart()
+  
   return (
-    <nav className="bg-blue-500 p-4 text-white flex justify-between items-center">
-      <div className="flex items-center gap-4">
-        {/* New Products Button */}
-        <Link to="/">
-          <Button color="white" className="text-blue-500">
-            Products
-          </Button>
-        </Link>
-        <Link to="/cart">
-          <Button color="white" className="text-blue-500">
-            Cart
-          </Button>
-        </Link>
-        <Link to="/login">
-          <Button color="white" className="text-blue-500">
-            Login
-          </Button>
-        </Link>
-        <Link to="/signup">
-          <Button color="white" className="text-blue-500">
-            Sign Up
-          </Button>
-        </Link>
+    <nav className="navbar">
+      <div className="nav-container">
+      <div className="logo">PharmaBeauty</div>
+        
+        <div className="nav-links">
+          <div className="nav-link-group">
+            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/products" className="nav-link">Products</Link>
+            <Link to="/login" className="nav-link">Login</Link>
+          </div>
+        </div>
+        
+        <div className="nav-icons">
+          <Link to="/cart" className="cart-link">
+            <FaShoppingCart className="icon" />
+            {cartItems.length > 0 && (
+              <span className="cart-count">{cartItems.length}</span>
+            )}
+          </Link>
+        </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

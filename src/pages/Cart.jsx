@@ -1,89 +1,74 @@
-import { useCart } from "../components/CartContext";
-import { Card, CardBody, Button, Typography } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { useCart } from '../context/CartContext'
+import { Link } from 'react-router-dom'
+import '../styles/Cart.css'
 
 const Cart = () => {
-  const {
-    cart,
-    removeFromCart,
-    clearCart,
-    incrementQuantity,
-    decrementQuantity,
-  } = useCart();
+  const { 
+    cartItems, 
+    removeFromCart, 
+    updateQuantity, 
+    totalPrice,
+    clearCart 
+  } = useCart()
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const handleQuantityChange = (id, e) => {
+    updateQuantity(id, parseInt(e.target.value))
+  }
 
   return (
-    <div className="container mx-auto py-10 px-4">
-      <Typography variant="h3" className="text-center font-bold mb-6">
-        Shopping Cart
-      </Typography>
-
-      {cart.length === 0 ? (
-        <Typography variant="h5" className="text-center">
-          Your cart is empty.
-        </Typography>
-      ) : (
-        <div className="space-y-4">
-          {cart.map((item) => (
-            <Card
-              key={item.id}
-              className="p-4 flex flex-col sm:flex-row justify-between items-center shadow-md"
-            >
-              <CardBody className="flex flex-col sm:flex-row items-center gap-4 w-full">
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  className="h-40 w-40 object-cover rounded-xl mb-4 shadow-md"
-                /> //control the size of the image
-                <div className="flex-1 text-center sm:text-left">
-                  <Typography variant="h5">{item.title}</Typography>
-                  <Typography variant="small" color="gray">
-                    ${item.price} x {item.quantity}
-                  </Typography>
-                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-2">
-                    <Button
-                      size="sm"
-                      color="blue"
-                      onClick={() => decrementQuantity(item.id)}
-                    >
-                      -
-                    </Button>
-                    <Typography variant="h6">{item.quantity}</Typography>
-                    <Button
-                      size="sm"
-                      color="blue"
-                      onClick={() => incrementQuantity(item.id)}
-                    >
-                      +
-                    </Button>
-                  </div>
-                </div>
-                <div className="mt-4 sm:mt-0">
-                  <Button color="red" onClick={() => removeFromCart(item.id)}>
-                    Remove
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
-          ))}
-
-          <div className="flex justify-between items-center p-4 mt-4 border-t border-gray-300">
-            <Typography variant="h4">Total: ${total.toFixed(2)}</Typography>
-            <Button color="blue" onClick={clearCart}>
-              Clear Cart
-            </Button>
-          </div>
+    <div className="cart-page">
+      <h1>Your Shopping Cart</h1>
+      
+      {cartItems.length === 0 ? (
+        <div className="empty-cart">
+          <p>Your cart is empty</p>
+          <Link to="/products" className="btn btn-primary">
+            Continue Shopping
+          </Link>
         </div>
+      ) : (
+        <>
+          <div className="cart-items">
+            {cartItems.map(item => (
+              <div key={item.id} className="cart-item">
+                <img src={item.image} alt={item.name} />
+                <div className="item-info">
+                  <h3>{item.name}</h3>
+                  <p>${item.price.toFixed(2)}</p>
+                </div>
+                <div className="quantity-control">
+                  <input
+                    type="number"
+                    min="1"
+                    value={item.quantity}
+                    onChange={(e) => handleQuantityChange(item.id, e)}
+                  />
+                </div>
+                <button 
+                  onClick={() => removeFromCart(item.id)}
+                  className="btn btn-outline"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+          
+          <div className="cart-summary">
+            <h2>Total: ${totalPrice.toFixed(2)}</h2>
+            <div className="cart-actions">
+              <button onClick={clearCart} className="btn btn-outline">
+                Clear Cart
+              </button>
+              <Link to="/checkout" className="btn btn-primary">
+                Proceed to Checkout
+              </Link>
+            </div>
+          </div>
+        </>
       )}
-
-      <div className="text-center mt-6">
-        <Link to="/">
-          <Button color="blue">Continue Shopping</Button>
-        </Link>
-      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

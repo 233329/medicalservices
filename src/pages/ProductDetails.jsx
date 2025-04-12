@@ -1,68 +1,51 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import axios from "axios";
-import { useCart } from "../components/CartContext";
-import { Card, CardBody, Button, Typography } from "@material-tailwind/react";
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { useCart } from '../context/CartContext'
+import api from '../utils/api'
+import '../styles/Products.css'
 
 const ProductDetails = () => {
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const { addToCart } = useCart();
+  const { id } = useParams()
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const { addToCart } = useCart()
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(
-          `https://dummyjson.com/products/${id}`
-        );
-        setProduct({ ...response.data, quantity: 1 });
+        const data = await api.getProduct(id)
+        setProduct(data)
+        setLoading(false)
       } catch (error) {
-        console.error("Error fetching product:", error);
+        console.error('Error fetching product:', error)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchProduct();
-  }, [id]);
+    fetchProduct()
+  }, [id])
 
-  if (!product)
-    return (
-      <Typography className="text-center py-10 text-blue-800 font-semibold">
-        Loading...
-      </Typography>
-    );
+  if (loading) return <p>Loading product...</p>
+  if (!product) return <p>Product not found</p>
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-100 to-sky-300 py-12 px-4 overflow-x-hidden">
-      <Card className="max-w-3xl mx-auto shadow-2xl rounded-2xl bg-white">
-        <CardBody className="p-6 flex flex-col md:flex-row items-center gap-6">
-          <img
-            src={product.thumbnail}
-            alt={product.title}
-            className="h-40 w-40 object-cover rounded-xl mb-4 shadow-md"
-          /> //control the image size
-          <div className="text-center md:text-left flex-1 min-w-[250px]">
-            <Typography variant="h5" className="font-bold text-gray-800">
-              {product.title}
-            </Typography>
-            <Typography className="text-lg text-blue-700 mt-1 font-semibold">
-              ${product.price}
-            </Typography>
-            <Typography className="mt-3 text-gray-700 text-sm leading-relaxed">
-              {product.description}
-            </Typography>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-              <Button color="blue" onClick={() => addToCart(product)}>
-                Add to Cart
-              </Button>
-              <Link to="/">
-                <Button color="gray">Back to Home</Button>
-              </Link>
-            </div>
-          </div>
-        </CardBody>
-      </Card>
+    <div className="product-details">
+      <div className="product-image">
+        <img src={product.image} alt={product.name} />
+      </div>
+      <div className="product-info">
+        <h1>{product.name}</h1>
+        <p className="price">${product.price.toFixed(2)}</p>
+        <p className="description">{product.description}</p>
+        <button 
+          onClick={() => addToCart(product)}
+          className="btn btn-primary"
+        >
+          Add to Cart
+        </button>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProductDetails;
+export default ProductDetails
