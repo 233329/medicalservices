@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE = 'https://topaz-vine-pumpkin.glitch.me'
+const API_BASE = 'https://pharma-beauty-backend.vercel.app/api'
 
 const api = {
   getProducts: async () => {
